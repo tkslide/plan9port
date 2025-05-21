@@ -11,9 +11,11 @@
 #include <libsec.h>
 #include "dat.h"
 #include "fns.h"
-	/* for generating syms in mkfile only: */
-	#include <bio.h>
-	#include "edit.h"
+#include "config.h"
+
+/* for generating syms in mkfile only: */
+#include <bio.h>
+#include "edit.h"
 
 void	mousethread(void*);
 void	keyboardthread(void*);
@@ -21,27 +23,20 @@ void	waitthread(void*);
 void	xfidallocthread(void*);
 void	newwindowthread(void*);
 void	plumbproc(void*);
-int	timefmt(Fmt*);
+int		timefmt(Fmt*);
 
 Reffont	**fontcache;
 int		nfontcache;
-char		wdir[512] = ".";
+char	wdir[512] = ".";
 Reffont	*reffonts[2];
 int		snarffd = -1;
 int		mainpid;
-int		swapscrollbuttons = FALSE;
-char		*mtpt;
+char	*mtpt;
 
 enum{
 	NSnarf = 1000	/* less than 1024, I/O buffer size */
 };
 Rune	snarfrune[NSnarf+1];
-
-char		*fontnames[2] =
-{
-	"/lib/font/bit/lucsans/euro.8.font",
-	"/lib/font/bit/lucm/unicode.9.font"
-};
 
 Command *command;
 
@@ -65,7 +60,6 @@ threadmain(int argc, char *argv[])
 	Column *c;
 	int ncol;
 	Display *d;
-
 	rfork(RFENVG|RFNAMEG);
 
 	ncol = -1;
@@ -78,11 +72,26 @@ threadmain(int argc, char *argv[])
 		}
 		break;
 	case 'a':
-		globalautoindent = TRUE;
+		if(globalautoindent)
+			globalautoindent = FALSE;
+		else
+			globalautoindent = TRUE;
 		break;
-	case 'b':
+
+/*  bartmode/flag is now an option to be turned on config.h, just
+ *  because it is way too useful to leave it as an meaningless
+ *  flag, especially since considering how almost everyone seems
+ *  to even miss its existence.
+ *
+ *  to get to the point, it denies window focus following mouse.
+ *  how fickle those mice can truly be when decieveth by a soothing
+ *  treat, a teat or two.
+ */
+
+/*	case 'b':
 		bartflag = TRUE;
-		break;
+		break; */
+
 	case 'c':
 		p = ARGF();
 		if(p == nil)
@@ -393,7 +402,6 @@ acmeerrorproc(void *v)
 		buf[n] = '\0';
 		sendp(cerr, estrdup(buf));
 	}
-	free(buf);
 }
 
 void
@@ -518,7 +526,6 @@ mousethread(void *v)
 	Mouse m;
 	char *act;
 	enum { MResize, MMouse, MPlumb, MWarnings, NMALT };
-	enum { Shift = 5 };
 	static Alt alts[NMALT+1];
 
 	USED(v);
@@ -662,9 +669,9 @@ mousethread(void *v)
 				}else if(m.buttons & 2){
 					if(textselect2(t, &q0, &q1, &argt))
 						execute(t, q0, q1, FALSE, argt);
-				}else if(m.buttons & (4|(4<<Shift))){
+				}else if(m.buttons & 4){
 					if(textselect3(t, &q0, &q1))
-						look3(t, q0, q1, FALSE, (m.buttons&(4<<Shift))!=0);
+						look3(t, q0, q1, FALSE);
 				}
 				if(w)
 					winunlock(w);
@@ -771,7 +778,7 @@ waitthread(void *v)
 					pids = p;
 				}
 			}else{
-				if(search(t, c->name, c->nname, FALSE)){
+				if(search(t, c->name, c->nname)){
 					textdelete(t, t->q0, t->q1, TRUE);
 					textsetselect(t, 0, 0);
 				}
@@ -965,74 +972,6 @@ Cursor boxcursor = {
 	 0x7F, 0xFE, 0x7F, 0xFE, 0x7F, 0xFE, 0x00, 0x00}
 };
 
-Cursor2 boxcursor2 = {
-	{-15, -15},
-	{0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xC0, 0x03, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF,
-	 0xFF, 0xFF, 0xFF, 0xFF},
-	{0x00, 0x00, 0x00, 0x00,
-	 0x00, 0x00, 0x00, 0x00,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0x00, 0x00, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x3F, 0xFF, 0xFF, 0xFC,
-	 0x00, 0x00, 0x00, 0x00,
-	 0x00, 0x00, 0x00, 0x00}
-};
-
 void
 iconinit(void)
 {
@@ -1040,22 +979,22 @@ iconinit(void)
 	Image *tmp;
 
 	if(tagcols[BACK] == nil) {
-		/* Blue */
-		tagcols[BACK] = allocimagemix(display, DPalebluegreen, DWhite);
-		tagcols[HIGH] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DPalegreygreen);
-		tagcols[BORD] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DPurpleblue);
-		tagcols[TEXT] = display->black;
-		tagcols[HTEXT] = display->black;
 
-		/* Yellow */
-		textcols[BACK] = allocimagemix(display, DPaleyellow, DWhite);
-		textcols[HIGH] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DDarkyellow);
-		textcols[BORD] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DYellowgreen);
-		textcols[TEXT] = display->black;
-		textcols[HTEXT] = display->black;
+		tagcols[BACK]	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGBG);
+		tagcols[HIGH]	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLBG);
+		tagcols[BORD]	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_COLBUTTON);
+		tagcols[TEXT]	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGFG);
+		tagcols[HTEXT]	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLFG);
+
+		textcols[BACK] 	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
+		textcols[HIGH] 	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG);
+		textcols[BORD] 	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_SCROLLBG);
+		textcols[TEXT] 	= allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
+		textcols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
+
 	}
 
-	r = Rect(0, 0, Scrollwid, font->height+1);
+	r = Rect(0, 0, Scrollwid+ButtonBorder, font->height+1);
 	if(button && eqrect(r, button->r))
 		return;
 
@@ -1067,22 +1006,24 @@ iconinit(void)
 
 	button = allocimage(display, r, screen->chan, 0, DNofill);
 	draw(button, r, tagcols[BACK], nil, r.min);
+	r.max.x -= ButtonBorder;
 	border(button, r, ButtonBorder, tagcols[BORD], ZP);
 
 	r = button->r;
 	modbutton = allocimage(display, r, screen->chan, 0, DNofill);
 	draw(modbutton, r, tagcols[BACK], nil, r.min);
+	r.max.x -= ButtonBorder;
 	border(modbutton, r, ButtonBorder, tagcols[BORD], ZP);
 	r = insetrect(r, ButtonBorder);
-	tmp = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DMedblue);
+	tmp = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TMPBUTTON);
 	draw(modbutton, r, tmp, nil, ZP);
 	freeimage(tmp);
 
 	r = button->r;
-	colbutton = allocimage(display, r, screen->chan, 0, DPurpleblue);
+	colbutton = allocimage(display, r, RGBA32, 1, C_WINBUTTON);
 
-	but2col = allocimage(display, r, screen->chan, 1, 0xAA0000FF);
-	but3col = allocimage(display, r, screen->chan, 1, 0x006600FF);
+	but2col = allocimage(display, r, screen->chan, 1, C_BUTTON2HL);
+	but3col = allocimage(display, r, screen->chan, 1, C_BUTTON3HL);
 }
 
 /*

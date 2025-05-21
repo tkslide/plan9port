@@ -97,7 +97,7 @@ windrawbutton(Window *w)
 {
 	Image *b;
 	Rectangle br;
-
+	
 	b = button;
 	if(!w->isdir && !w->isscratch && (w->body.file->mod || w->body.ncache))
 		b = modbutton;
@@ -110,22 +110,25 @@ windrawbutton(Window *w)
 int
 delrunepos(Window *w)
 {
-	Rune *r;
-	int i;
-
-	r = parsetag(w, 0, &i);
-	free(r);
-	i += 2;
-	if(i >= w->tag.file->b.nc)
+	int n;
+	Rune rune;
+	
+	for(n=0; n<w->tag.file->b.nc; n++) {
+		bufread(&w->tag.file->b, n, &rune, 1);
+		if(rune == ' ')
+			break;
+	}
+	n += 2;
+	if(n >= w->tag.file->b.nc)
 		return -1;
-	return i;
+	return n;
 }
 
 void
 movetodel(Window *w)
 {
 	int n;
-
+	
 	n = delrunepos(w);
 	if(n < 0)
 		return;
@@ -150,7 +153,7 @@ wintaglines(Window *w, Rectangle r)
 	textresize(&w->tag, r, TRUE);
 	w->tag.fr.noredraw = 0;
 	w->tagsafe = FALSE;
-
+	
 	if(!w->tagexpand) {
 		/* use just as many lines as needed to show the Del */
 		n = delrunepos(w);
@@ -159,7 +162,7 @@ wintaglines(Window *w, Rectangle r)
 		p = subpt(frptofchar(&w->tag.fr, n), w->tag.fr.r.min);
 		return 1 + p.y / w->tag.fr.font->height;
 	}
-
+		
 	/* can't use more than we have */
 	if(w->tag.fr.nlines >= w->tag.fr.maxlines)
 		return w->tag.fr.maxlines;
@@ -221,7 +224,7 @@ winresize(Window *w, Rectangle r, int safe, int keepextra)
 			moveto(mousectl, p);
 		}
 	}
-
+	
 	/* If needed, resize & redraw body. */
 	r1 = r;
 	r1.min.y = y;
@@ -235,7 +238,6 @@ winresize(Window *w, Rectangle r, int safe, int keepextra)
 			r1.min.y = min(y, r.max.y);
 			r1.max.y = r.max.y;
 		}else{
-			draw(screen, r1, textcols[BACK], nil, ZP);
 			r1.min.y = y;
 			r1.max.y = y;
 		}
@@ -291,7 +293,7 @@ winunlock(Window *w)
 void
 winmousebut(Window *w)
 {
-	moveto(mousectl, addpt(w->tag.scrollr.min,
+	moveto(mousectl, addpt(w->tag.scrollr.min, 
 		divpt(Pt(Dx(w->tag.scrollr), font->height), 2)));
 }
 
@@ -417,7 +419,11 @@ wincleartag(Window *w)
 
 	/* w must be committed */
 	n = w->tag.file->b.nc;
-	r = parsetag(w, 0, &i);
+	r = runemalloc(n);
+	bufread(&w->tag.file->b, 0, r, n);
+	for(i=0; i<n; i++)
+		if(r[i]==' ' || r[i]=='\t')
+			break;
 	for(; i<n; i++)
 		if(r[i] == '|')
 			break;
@@ -432,38 +438,6 @@ wincleartag(Window *w)
 	if(w->tag.q1 > i)
 		w->tag.q1 = i;
 	textsetselect(&w->tag, w->tag.q0, w->tag.q1);
-}
-
-Rune*
-parsetag(Window *w, int extra, int *len)
-{
-	static Rune Ldelsnarf[] = { ' ', 'D', 'e', 'l', ' ', 'S', 'n', 'a', 'r', 'f', 0 };
-	static Rune Lspacepipe[] = { ' ', '|', 0 };
-	static Rune Ltabpipe[] = { '\t', '|', 0 };
-	int i;
-	Rune *r, *p, *pipe;
-
-	r = runemalloc(w->tag.file->b.nc+extra+1);
-	bufread(&w->tag.file->b, 0, r, w->tag.file->b.nc);
-	r[w->tag.file->b.nc] = '\0';
-
-	/*
-	 * " |" or "\t|" ends left half of tag
-	 * If we find " Del Snarf" in the left half of the tag
-	 * (before the pipe), that ends the file name.
-	 */
-	pipe = runestrstr(r, Lspacepipe);
-	if((p = runestrstr(r, Ltabpipe)) != nil && (pipe == nil || p < pipe))
-		pipe = p;
-	if((p = runestrstr(r, Ldelsnarf)) != nil && (pipe == nil || p < pipe))
-		i = p - r;
-	else {
-		for(i=0; i<w->tag.file->b.nc; i++)
-			if(r[i]==' ' || r[i]=='\t')
-				break;
-	}
-	*len = i;
-	return r;
 }
 
 void
@@ -484,7 +458,12 @@ winsettag1(Window *w)
 	/* there are races that get us here with stuff in the tag cache, so we take extra care to sync it */
 	if(w->tag.ncache!=0 || w->tag.file->mod)
 		wincommit(w, &w->tag);	/* check file name; also guarantees we can modify tag contents */
-	old = parsetag(w, 0, &i);
+	old = runemalloc(w->tag.file->b.nc+1);
+	bufread(&w->tag.file->b, 0, old, w->tag.file->b.nc);
+	old[w->tag.file->b.nc] = '\0';
+	for(i=0; i<w->tag.file->b.nc; i++)
+		if(old[i]==' ' || old[i]=='\t')
+			break;
 	if(runeeq(old, i, w->body.file->name, w->body.file->nname) == FALSE){
 		textdelete(&w->tag, 0, i, TRUE);
 		textinsert(&w->tag, 0, w->body.file->name, w->body.file->nname, TRUE);
@@ -497,8 +476,7 @@ winsettag1(Window *w)
 	/* compute the text for the whole tag, replacing current only if it differs */
 	new = runemalloc(w->body.file->nname+100);
 	i = 0;
-	if(w->body.file->nname != 0)
-		runemove(new, w->body.file->name, w->body.file->nname);
+	runemove(new+i, w->body.file->name, w->body.file->nname);
 	i += w->body.file->nname;
 	runemove(new+i, Ldelsnarf, 10);
 	i += 10;
@@ -605,7 +583,11 @@ wincommit(Window *w, Text *t)
 			textcommit(f->text[i], FALSE);	/* no-op for t */
 	if(t->what == Body)
 		return;
-	r = parsetag(w, 0, &i);
+	r = runemalloc(w->tag.file->b.nc);
+	bufread(&w->tag.file->b, 0, r, w->tag.file->b.nc);
+	for(i=0; i<w->tag.file->b.nc; i++)
+		if(r[i]==' ' || r[i]=='\t')
+			break;
 	if(runeeq(r, i, w->body.file->name, w->body.file->nname) == FALSE){
 		seq++;
 		filemark(w->body.file);
@@ -690,8 +672,8 @@ winctlprint(Window *w, char *buf, int fonts)
 	sprint(buf, "%11d %11d %11d %11d %11d ", w->id, w->tag.file->b.nc,
 		w->body.file->b.nc, w->isdir, w->dirty);
 	if(fonts)
-		return smprint("%s%11d %q %11d %11d %11d ", buf, Dx(w->body.fr.r),
-			w->body.reffont->f->name, w->body.fr.maxtab, seqof(w, 1) != 0, seqof(w, 0) != 0);
+		return smprint("%s%11d %q %11d ", buf, Dx(w->body.fr.r), 
+			w->body.reffont->f->name, w->body.fr.maxtab);
 	return buf;
 }
 

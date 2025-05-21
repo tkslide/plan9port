@@ -28,7 +28,7 @@ enum
 enum
 {
 	Blockincr =	256,
-	Maxblock = 	32*1024,
+	Maxblock = 	8*1024,
 	NRange =		10,
 	Infinity = 		0x7FFFFFFF	/* huge value for regexp address */
 };
@@ -454,7 +454,6 @@ struct Expand
 	int	nname;
 	char	*bname;
 	int	jump;
-	int	reverse;
 	union{
 		Text	*at;
 		Rune	*ar;
@@ -526,7 +525,6 @@ Image		*button;
 Image		*but2col;
 Image		*but3col;
 Cursor		boxcursor;
-Cursor2		boxcursor2;
 Row			row;
 int			timerpid;
 Disk			*disk;

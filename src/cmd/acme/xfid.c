@@ -486,7 +486,7 @@ xfidwrite(Xfid *x)
 		t = &w->body;
 		wincommit(w, t);
 		eval = TRUE;
-		a = address(FALSE, t, w->limit, w->addr, r, 0, nr, rgetc, &eval, (uint*)&nb, FALSE);
+		a = address(FALSE, t, w->limit, w->addr, r, 0, nr, rgetc, &eval, (uint*)&nb);
 		free(r);
 		if(nb < nr){
 			respond(x, &fc, Ebadaddr);
@@ -691,7 +691,7 @@ xfidctlwrite(Xfid *x, Window *w)
 				break;
 			}
 			for(i=0; i<nr; i++)
-				if(r[i] < ' '){
+				if(r[i] <= ' '){
 					err = "bad character in file name";
 					goto out;
 				}
@@ -699,24 +699,6 @@ out:
 			seq++;
 			filemark(w->body.file);
 			winsetname(w, r, nr);
-			m += (q+1) - pp;
-		}else
-		if(strncmp(p, "font ", 5) == 0){		/* execute font command */
-			pp = p+5;
-			m = 5;
-			q = memchr(pp, '\n', e-pp);
-			if(q==nil || q==pp){
-				err = Ebadctl;
-				break;
-			}
-			*q = 0;
-			nulls = FALSE;
-			cvttorunes(pp, q-pp, r, &nb, &nr, &nulls);
-			if(nulls){
-				err = "nulls in font string";
-				break;
-			}
-			fontx(&w->body, nil, nil, FALSE, XXX, r, nr);
 			m += (q+1) - pp;
 		}else
 		if(strncmp(p, "dump ", 5) == 0){	/* set dump string */
@@ -808,12 +790,10 @@ out:
 		}else
 		if(strncmp(p, "nomenu", 6) == 0){	/* turn off automatic menu */
 			w->filemenu = FALSE;
-			settag = TRUE;
 			m = 6;
 		}else
 		if(strncmp(p, "menu", 4) == 0){	/* enable automatic menu */
 			w->filemenu = TRUE;
-			settag = TRUE;
 			m = 4;
 		}else
 		if(strncmp(p, "cleartag", 8) == 0){	/* wipe tag right of bar */
@@ -900,11 +880,7 @@ xfideventwrite(Xfid *x, Window *w)
 			break;
 		case 'l':
 		case 'L':
-			look3(t, q0, q1, TRUE, FALSE);
-			break;
-		case 'r':
-		case 'R':
-			look3(t, q0, q1, TRUE, TRUE);
+			look3(t, q0, q1, TRUE);
 			break;
 		default:
 			qunlock(&row.lk);

@@ -25,8 +25,6 @@ void	savemouse(Window*);
 int	restoremouse(Window*);
 void	clearmouse(void);
 void	allwindows(void(*)(Window*, void*), void*);
-uint seqof(Window*, int);
-
 uint loadfile(int, uint, int*, int(*)(void*, uint, Rune*, int), void*, DigestState*);
 void	movetodel(Window*);
 
@@ -63,8 +61,8 @@ void	fontx(Text*, Text*, Text*, int, int, Rune*, int);
 #define isalnum acmeisalnum
 int	isalnum(Rune);
 void	execute(Text*, uint, uint, int, Text*);
-int	search(Text*, Rune*, uint, int);
-void	look3(Text*, uint, uint, int, int);
+int	search(Text*, Rune*, uint);
+void	look3(Text*, uint, uint, int);
 void	editcmd(Text*, Rune*, uint);
 uint	min(uint, uint);
 uint	max(uint, uint);
@@ -85,11 +83,11 @@ int		isregexc(int);
 void *emalloc(uint);
 void *erealloc(void*, uint);
 char	*estrdup(char*);
-Range		address(uint, Text*, Range, Range, void*, uint, uint, int (*)(void*, uint),  int*, uint*, int);
+Range		address(uint, Text*, Range, Range, void*, uint, uint, int (*)(void*, uint),  int*, uint*);
 int		rxexecute(Text*, Rune*, uint, uint, Rangeset*);
 int		rxbexecute(Text*, uint, Rangeset*);
 Window*	makenewwindow(Text *t);
-int	expand(Text*, uint, uint, Expand*, int);
+int	expand(Text*, uint, uint, Expand*);
 Rune*	skipbl(Rune*, int, int*);
 Rune*	findbl(Rune*, int, int*);
 char*	edittext(Window*, int, Rune*, int);
@@ -97,7 +95,6 @@ void		flushwarnings(void);
 void		startplumbing(void);
 long	nlcount(Text*, long, long, long*);
 long	nlcounttopos(Text*, long, long, long);
-Rune*	parsetag(Window*, int, int*);
 
 Runestr	runestr(Rune*, uint);
 Range range(int, int);

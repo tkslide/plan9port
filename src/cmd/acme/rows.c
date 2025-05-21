@@ -148,7 +148,7 @@ rowdragcol(Row *row, Column *c, int _0)
 	USED(_0);
 
 	clearmouse();
-	setcursor2(mousectl, &boxcursor, &boxcursor2);
+	setcursor(mousectl, &boxcursor);
 	b = mouse->buttons;
 	op = mouse->xy;
 	while(mouse->buttons == b)
@@ -316,10 +316,10 @@ rowclean(Row *row)
 void
 rowdump(Row *row, char *file)
 {
-	int i, j, fd, m, n, start, dumped;
+	int i, j, fd, m, n, dumped;
 	uint q0, q1;
 	Biobuf *b;
-	char *buf, *a, *fontname, *fontfmt, *fontnamelo, *fontnamehi;
+	char *buf, *a, *fontname;
 	Rune *r;
 	Column *c;
 	Window *w, *w1;
@@ -394,17 +394,9 @@ rowdump(Row *row, char *file)
 					if(w1->nopen[QWevent])
 						goto Continue2;
 				}
-			fontfmt = "%s";
-			fontnamelo = "";
-			fontnamehi = nil;
-			if(t->reffont->f != font){
-				fontnamelo = t->reffont->f->lodpi->name;
-				if(t->reffont->f->hidpi != nil){
-					fontfmt = "%s,%s";
-					fontnamehi = t->reffont->f->hidpi->name;
-				}
-			}
-			fontname = smprint(fontfmt, fontnamelo, fontnamehi);
+			fontname = "";
+			if(t->reffont->f != font)
+				fontname = t->reffont->f->name;
 			if(t->file->nname)
 				a = runetobyte(t->file->name, t->file->nname);
 			else
@@ -436,24 +428,15 @@ rowdump(Row *row, char *file)
 					100.0*(w->r.min.y-c->r.min.y)/Dy(c->r),
 					w->body.file->b.nc, fontname);
 			}
-			free(fontname);
 			free(a);
 			winctlprint(w, buf, 0);
 			Bwrite(b, buf, strlen(buf));
 			m = min(RBUFSIZE, w->tag.file->b.nc);
 			bufread(&w->tag.file->b, 0, r, m);
 			n = 0;
-			while(n<m) {
-				start = n;
-				while(n<m && r[n]!='\n')
-					n++;
-				Bprint(b, "%.*S", n-start, r+start);
-				if(n<m) {
-					Bputc(b, 0xff); // \n in tag becomes 0xff byte (invalid UTF)
-					n++;
-				}
-			}
-			Bprint(b, "\n");
+			while(n<m && r[n]!='\n')
+				n++;
+			Bprint(b, "%.*S\n", n, r);
 			if(dumped){
 				q0 = 0;
 				q1 = t->file->b.nc;
@@ -630,7 +613,6 @@ rowload(Row *row, char *file, int initing)
 			}
 			textdelete(&row->col[i]->tag, 0, row->col[i]->tag.file->b.nc, TRUE);
 			textinsert(&row->col[i]->tag, 0, r+n+1, nr-(n+1), TRUE);
-			free(r);
 			break;
 		case 'w':
 			l[Blinelen(b)-1] = 0;
@@ -644,7 +626,6 @@ rowload(Row *row, char *file, int initing)
 			}
 			textdelete(&row->tag, 0, row->tag.file->b.nc, TRUE);
 			textinsert(&row->tag, 0, r, nr, TRUE);
-			free(r);
 			break;
 		default:
 			done = 1;
@@ -736,10 +717,6 @@ rowload(Row *row, char *file, int initing)
 		if(l == nil)
 			goto Rescue2;
 		l[Blinelen(b)-1] = 0;
-		/* convert 0xff in multiline tag back to \n */
-		for(i = 0; l[i] != 0; i++)
-			if((uchar)l[i] == 0xff)
-				l[i] = '\n';
 		r = bytetorune(l+5*12, &nr);
 		ns = -1;
 		for(n=0; n<nr; n++){

@@ -15,9 +15,6 @@
 Rangeset	sel;
 Rune		*lastregexp;
 
-#undef class
-#define class regxclass /* some systems declare "class" in system headers */
-
 /*
  * Machine Information
  */
