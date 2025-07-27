@@ -559,7 +559,8 @@ mousethread(void *v)
 		case MResize:
 			if(getwindow(display, Refnone) < 0)
 				error("attach to window");
-			draw(screen, screen->r, display->white, nil, ZP);
+			//draw(screen, screen->r, display->white, nil, ZP);
+			draw(screen, screen->r, textcols[BACK], nil, ZP);
 			iconinit();
 			scrlresize();
 			rowresize(&row, screen->clipr);
