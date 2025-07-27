@@ -14,7 +14,7 @@
 
 char *fontnames[2] = {
 	"/lib/font/bit/profont/profont-12.font",
-	"/lib/font/bit/mntcarlo/mntcarlo.font"
+	"/lib/font/bit/profont/profont-12.font",
 };
 
 /*
@@ -62,12 +62,12 @@ int bartflag			= TRUE;
  *  buttons highlight background.
  */
 
-#define C_TAGBG			0xFFFFFFFF
+#define C_TAGBG			0xFDF5E6FF
 #define C_TAGFG			0x000000FF
 #define C_TAGHLBG		0x999999FF
 #define C_TAGHLFG		0x000000FF
 
-#define C_TXTBG			0xFFFFFFFF
+#define C_TXTBG			0xFDF5E6FF
 #define C_TXTFG			0x000000FF
 #define C_TXTHLBG		0x999999FF
 #define C_TXTHLFG		0x000000FF
