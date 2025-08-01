@@ -857,7 +857,7 @@ texttype(Text *t, Rune r)
 		filemark(t->file);
 	}
 	
-	/* cut/paste must be done after the seq++/filemark */
+	/* cut/paste must be done after the seq++/filemark */
 	
 	switch(r){
 	case Kcmd+'x':	/* %X: cut */

@@ -12,6 +12,7 @@
 #include <complete.h>
 #include "dat.h"
 #include "fns.h"
+#include "config.h"
 
 #define MOVEIT if(0)
 
@@ -26,14 +27,11 @@ static	int		topped;
 static	int		id;
 
 static	Image	*cols[NCOL];
-static	Image	*grey;
-static	Image	*darkgrey;
 static	Cursor	*lastcursor;
-static	Image	*titlecol;
-static	Image	*lighttitlecol;
+//static	Image	*titlecol;
 static	Image	*holdcol;
 static	Image	*lightholdcol;
-static	Image	*paleholdcol;
+//static	Image	*paleholdcol;
 
 static int
 wscale(Window *w, int n)
@@ -50,19 +48,14 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 	Rectangle r;
 
 	if(cols[0] == nil){
-		/* greys are multiples of 0x11111100+0xFF, 14* being palest */
-		grey = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0xEEEEEEFF);
-		darkgrey = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0x666666FF);
-		cols[BACK] = display->white;
-		cols[HIGH] = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0xCCCCCCFF);
-		cols[BORD] = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0x999999FF);
-		cols[TEXT] = display->black;
-		cols[HTEXT] = display->black;
-		titlecol = allocimage(display, Rect(0,0,1,1), CMAP8, 1, DGreygreen);
-		lighttitlecol = allocimage(display, Rect(0,0,1,1), CMAP8, 1, DPalegreygreen);
-		holdcol = allocimage(display, Rect(0,0,1,1), CMAP8, 1, DMedblue);
-		lightholdcol = allocimage(display, Rect(0,0,1,1), CMAP8, 1, DGreyblue);
-		paleholdcol = allocimage(display, Rect(0,0,1,1), CMAP8, 1, DPalegreyblue);
+		cols[BACK]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTBG);
+		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLBG);
+		cols[BORD]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_WINBUTTON);
+		cols[TEXT]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTFG);
+		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLFG);
+//		titlecol      = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_DEBUG);  //DGreygreen);
+		holdcol       = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTFG);
+		lightholdcol  = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLFG);
 	}
 	w = emalloc(sizeof(Window));
 	w->screenr = i->r;
@@ -684,17 +677,17 @@ wkeyctl(Window *w, Rune r)
 		waddraw(w, &r, 1);
 		return;
 	}
-	if(r == Kcmd+'x'){
+	if(r == Kcmd+'x' || r == Kalt+'x') {
 		wsnarf(w);
 		wcut(w);
 		wscrdraw(w);
 		return;
 	}
-	if(r == Kcmd+'c'){
+	if(r == Kcmd+'c' || r == Kalt+'c'){
 		wsnarf(w);
 		return;
 	}
-	if(r == Kcmd+'v'){
+	if(r == Kcmd+'v' || r == Kalt+'v'){
 		riogetsnarf();
 		wpaste(w);
 		wscrdraw(w);
@@ -764,9 +757,9 @@ wsetcols(Window *w)
 			w->f.cols[TEXT] = w->f.cols[HTEXT] = lightholdcol;
 	else
 		if(w == input)
-			w->f.cols[TEXT] = w->f.cols[HTEXT] = display->black;
+			w->f.cols[TEXT] = w->f.cols[HTEXT] = cols[HTEXT];
 		else
-			w->f.cols[TEXT] = w->f.cols[HTEXT] = darkgrey;
+			w->f.cols[TEXT] = w->f.cols[HTEXT] = cols[TEXT];
 }
 
 void
