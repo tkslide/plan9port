@@ -85,6 +85,7 @@ static Rune LLocal[] = { 'L', 'o', 'c', 'a', 'l', 0 };
 static Rune LLook[] = { 'L', 'o', 'o', 'k', 0 };
 static Rune LNew[] = { 'N', 'e', 'w', 0 };
 static Rune LNewcol[] = { 'N', 'e', 'w', 'c', 'o', 'l', 0 };
+static Rune LNight[] = { 'N', 'i', 'g', 'h', 't', 0};
 static Rune LPaste[] = { 'P', 'a', 's', 't', 'e', 0 };
 static Rune LPut[] = { 'P', 'u', 't', 0 };
 static Rune LPutall[] = { 'P', 'u', 't', 'a', 'l', 'l', 0 };
@@ -116,6 +117,7 @@ Exectab exectab[] = {
 	{ LLook,		look,		FALSE,	XXX,		XXX		},
 	{ LNew,		new,		FALSE,	XXX,		XXX		},
 	{ LNewcol,	newcol,	FALSE,	XXX,		XXX		},
+	{ LNight,   night, FALSE, XXX, XXX },
 	{ LPaste,		paste,	TRUE,	TRUE,	XXX		},
 	{ LPut,		put,		FALSE,	XXX,		XXX		},
 	{ LPutall,		putall,	FALSE,	XXX,		XXX		},
@@ -432,6 +434,7 @@ seqof(Window *w, int isundo)
 	/* if it's redo, see who we'll be sync'ed up with */
 	return fileredoseq(w->body.file);
 }
+
 
 void
 undo(Text *et, Text *_0, Text *_1, int flag1, int _2, Rune *_3, int _4)
@@ -1264,6 +1267,12 @@ xkill(Text *_0, Text *_1, Text *argt, int _2, int _3, Rune *arg, int narg)
 
 static Rune Lfix[] = { 'f', 'i', 'x', 0 };
 static Rune Lvar[] = { 'v', 'a', 'r', 0 };
+
+void
+night(Text *et, Text *t, Text *argt, int _0, int _1, Rune *arg, int narg)
+{
+;
+}
 
 void
 fontx(Text *et, Text *t, Text *argt, int _0, int _1, Rune *arg, int narg)
