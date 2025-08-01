@@ -1,7 +1,9 @@
 Warning
 -------
-It's a modified, hand-crufted version of Plan9Port, with a modified [!acme2k](https://github.com/karahobny/acme2k) version replacing the standard.
-
+It's a modified, hand-crufted version of Plan9Port, with 
+- modified [acme2k](https://github.com/karahobny/acme2k) version replacing the original.
+- additional fonts
+- random tweaks I added for reasons known only to myself. 
 
 This is a port of many Plan 9 libraries and programs to Unix.
 
