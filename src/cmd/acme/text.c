@@ -1388,12 +1388,12 @@ xselect(Frame *f, Mousectl *mc, Image *col, uint *p1p)	/* when called, button is
 				pt1 = pt0;
 				reg = region(q, p0);
 				if(reg == 0)
-					frdrawsel0(f, pt0, p0, p1, col, display->white);
+					frdrawsel0(f, pt0, p0, p1, col, textcols[BACK]);
 			}
 			qt = frptofchar(f, q);
 			if(reg > 0){
 				if(q > p1)
-					frdrawsel0(f, pt1, p1, q, col, display->white);
+					frdrawsel0(f, pt1, p1, q, col, textcols[BACK]);
 
 				else if(q < p1)
 					selrestore(f, qt, q, p1);
@@ -1401,7 +1401,7 @@ xselect(Frame *f, Mousectl *mc, Image *col, uint *p1p)	/* when called, button is
 				if(q > p1)
 					selrestore(f, pt1, p1, q);
 				else
-					frdrawsel0(f, qt, q, p1, col, display->white);
+					frdrawsel0(f, qt, q, p1, col, textcols[BACK]);
 			}
 			p1 = q;
 			pt1 = qt;

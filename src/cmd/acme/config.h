@@ -13,8 +13,10 @@
  */
 
 char *fontnames[2] = {
-	"/lib/font/bit/profont/profont-12.font",
-	"/lib/font/bit/profont/profont-12.font",
+	/* "/lib/font/bit/profont/profont-12.font", */
+	"/mnt/font/Hack-Regular/9a/font",
+	/*"/mnt/font/UbuntuMono-Regular/8a/font", */
+	"/mnt/font/Ubuntu-Regular/9a/font",
 };
 
 /*
@@ -61,6 +63,26 @@ int bartflag			= TRUE;
  *  the last two defines are for defining the color of the specific
  *  buttons highlight background.
  */
+
+/*
+#define C_TAGFG			0xFDF5E6FF
+#define C_TAGBG			0x000000FF
+#define C_TAGHLFG		0x999999FF
+#define C_TAGHLBG		0x000000FF
+
+#define C_TXTFG			0xFDF5E6FF
+#define C_TXTBG			0x000000FF
+#define C_TXTHLFG		0x999999FF
+#define C_TXTHLBG		0x000000FF
+
+#define C_WINBUTTON		0x4d4d4dFF
+#define C_COLBUTTON		0x55aaaaFF
+#define C_TMPBUTTON		0x55aaaaFF
+#define C_SCROLLBG		0x999999FF
+
+#define C_BUTTON2HL		0x55aaaaFF
+#define C_BUTTON3HL		0x55aaaaFF
+*/
 
 #define C_TAGBG			0xFDF5E6FF
 #define C_TAGFG			0x000000FF
