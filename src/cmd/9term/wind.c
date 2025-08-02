@@ -28,10 +28,8 @@ static	int		id;
 
 static	Image	*cols[NCOL];
 static	Cursor	*lastcursor;
-//static	Image	*titlecol;
 static	Image	*holdcol;
 static	Image	*lightholdcol;
-//static	Image	*paleholdcol;
 
 static int
 wscale(Window *w, int n)
@@ -48,14 +46,13 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 	Rectangle r;
 
 	if(cols[0] == nil){
-		cols[BACK]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTBG);
-		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLBG);
-		cols[BORD]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_WINBUTTON);
-		cols[TEXT]    = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTFG);
-		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLFG);
-//		titlecol      = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_DEBUG);  //DGreygreen);
-		holdcol       = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTFG);
-		lightholdcol  = allocimage(display, Rect(0,0,1,1), CMAP8, 1, C_TXTHLFG);
+		cols[BACK]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
+		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // not used ?
+		cols[BORD]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); // not used?
+		cols[TEXT]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
+		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
+		holdcol       = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_BUTTON2HL); // hold mode
+		lightholdcol  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLFG);
 	}
 	w = emalloc(sizeof(Window));
 	w->screenr = i->r;
