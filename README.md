@@ -3,6 +3,7 @@ Warning
 It's a modified, hand-crufted version of Plan9Port, with 
 - modified [acme2k](https://github.com/karahobny/acme2k) version replacing the original.
 - additional fonts
+- configurable colours for 9term (config.h for now -- if anyone wants runtime config or commandline options -- go on, you know where to find the sources)
 - random tweaks I added for reasons known only to myself. 
 
 This is a port of many Plan 9 libraries and programs to Unix.
