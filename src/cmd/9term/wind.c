@@ -30,6 +30,7 @@ static	Image	*cols[NCOL];
 static	Cursor	*lastcursor;
 static	Image	*holdcol;
 static	Image	*lightholdcol;
+static  Image *debugcol;
 
 static int
 wscale(Window *w, int n)
@@ -53,6 +54,7 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 		holdcol       = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_BUTTON2HL); // hold mode
 		lightholdcol  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLFG);
+		debugcol  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_DEBUG);
 	}
 	w = emalloc(sizeof(Window));
 	w->screenr = i->r;
@@ -754,9 +756,9 @@ wsetcols(Window *w)
 			w->f.cols[TEXT] = w->f.cols[HTEXT] = lightholdcol;
 	else
 		if(w == input)
-			w->f.cols[TEXT] = w->f.cols[HTEXT] = cols[HTEXT];
-		else
 			w->f.cols[TEXT] = w->f.cols[HTEXT] = cols[TEXT];
+		else
+			w->f.cols[TEXT] = w->f.cols[HTEXT] = cols[HTEXT];
 }
 
 void
