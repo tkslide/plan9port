@@ -12,6 +12,7 @@
 #include <complete.h>
 #include "dat.h"
 #include "fns.h"
+#include <colors.h>
 #include "config.h"
 
 #define MOVEIT if(0)
@@ -48,8 +49,8 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 
 	if(cols[0] == nil){
 		cols[BACK]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
-		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // not used ?
-		cols[BORD]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); // not used?
+		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
+		cols[BORD]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
 		cols[TEXT]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
 		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 		holdcol       = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_BUTTON2HL); // hold mode

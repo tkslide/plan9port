@@ -11,6 +11,7 @@
 #include <libsec.h>
 #include "dat.h"
 #include "fns.h"
+#include <colors.h>
 #include "config.h"
 
 /* for generating syms in mkfile only: */
