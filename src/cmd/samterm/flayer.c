@@ -7,6 +7,7 @@
 #include <keyboard.h>
 #include <frame.h>
 #include "flayer.h"
+#include <colors.h>
 #include "samterm.h"
 
 #define	DELTA	10
@@ -29,19 +30,19 @@ flstart(Rectangle r)
 {
 	lDrect = r;
 
-	/* Main text is yellowish */
-	maincols[BACK] = allocimagemix(display, DPaleyellow, DWhite);
-	maincols[HIGH] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DDarkyellow);
-	maincols[BORD] = allocimage(display, Rect(0,0,2,2), screen->chan, 1, DYellowgreen);
-	maincols[TEXT] = display->black;
-	maincols[HTEXT] = display->black;
+	/* main text is yellowish in original */
+	maincols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
+	maincols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
+	maincols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
+	maincols[TEXT]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
+	maincols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 
-	/* Command text is blueish */
-	cmdcols[BACK] = allocimagemix(display, DPalebluegreen, DWhite);
-	cmdcols[HIGH] = allocimage(display, Rect(0,0,1,1), screen->chan, 1, DPalegreygreen);
-	cmdcols[BORD] = allocimage(display, Rect(0,0,2,2), screen->chan, 1, DPurpleblue);
-	cmdcols[TEXT] = display->black;
-	cmdcols[HTEXT] = display->black;
+	/* command text is blueish  in original */
+	cmdcols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
+	cmdcols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
+	cmdcols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
+	cmdcols[TEXT]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
+	cmdcols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 }
 
 void

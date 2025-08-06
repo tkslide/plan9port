@@ -209,6 +209,8 @@ struct Timer
 #define Extern extern
 #endif
 
+extern int bartflag;
+
 extern	Font		*font;
 Extern	Mousectl	*mousectl;
 Extern	Mouse	*mouse;
@@ -223,7 +225,6 @@ extern	Cursor	whitearrow;
 extern	Cursor	query;
 extern	Cursor	*corners[9];
 Extern	Image	*background;
-Extern	Image	*lightgrey;
 Extern	Image	*red;
 Extern	Window	**window;
 Extern	Window	*wkeyboard;	/* window of simulated keyboard */
