@@ -28,11 +28,9 @@ static
 void
 menucolors(void)
 {
-	/* Main tone is greenish, with negative selection */
-	//XXX
-	back = allocimagemix(display, C_TXTBG, C_BUTTON2HL);
-	high = allocimage(display, Rect(0,0,1,1), screen->chan, 1, C_WINBUTTON);	/* dark green */
-	bord = allocimage(display, Rect(0,0,1,1), screen->chan, 1, C_BUTTON2HL);	/* not as dark green */
+	back = allocimagemix(display, C_TXTHLBG, C_SCROLLBG);
+	high = allocimage(display, Rect(0,0,1,1), screen->chan, 1, C_TXTHLBG);
+	bord = allocimage(display, Rect(0,0,1,1), screen->chan, 1, C_SCROLLBG);
 	if(back==nil || high==nil || bord==nil)
 		goto Error;
 	text = display->black;

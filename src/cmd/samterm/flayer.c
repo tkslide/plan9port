@@ -33,16 +33,21 @@ flstart(Rectangle r)
 	/* main text is yellowish in original */
 	maincols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
 	maincols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
-	maincols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
+	maincols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_SCROLLBG); 
 	maincols[TEXT]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
 	maincols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 
 	/* command text is blueish  in original */
-	cmdcols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
-	cmdcols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
-	cmdcols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
+	cmdcols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGBG);
+	cmdcols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLBG); // selection highlighing
+	cmdcols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_SCROLLBG); 
 	cmdcols[TEXT]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
 	cmdcols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
+	//cmdcols[BACK]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
+	//cmdcols[HIGH]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
+	//cmdcols[BORD]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_SCROLLBG); 
+	//cmdcols[TEXT]  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
+	//cmdcols[HTEXT] = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
 }
 
 void
