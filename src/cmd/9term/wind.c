@@ -50,12 +50,12 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 	if(cols[0] == nil){
 		cols[BACK]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG);
 		cols[HIGH]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLBG); // selection highlighing
-		cols[BORD]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_WINBUTTON); 
+		cols[BORD]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_SCROLLBG); 
 		cols[TEXT]    = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTFG);
 		cols[HTEXT]   = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTHLFG);
-		holdcol       = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_BUTTON2HL); // hold mode
+		holdcol       = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TMPBUTTON); // hold mode
 		lightholdcol  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TAGHLFG);
-		debugcol  = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_DEBUG);
+		debugcol      = allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_DEBUG);
 	}
 	w = emalloc(sizeof(Window));
 	w->screenr = i->r;
@@ -82,7 +82,8 @@ wmk(Image *i, Mousectl *mc, Channel *ck, Channel *cctl, int scrolling)
 	w->dir = estrdup(startdir);
 	w->label = estrdup("<unnamed>");
 	r = insetrect(w->i->r, wscale(w, Selborder));
-	draw(w->i, r, cols[BACK], nil, w->f.entire.min);
+	//draw(w->i, r, cols[BACK], nil, w->f.entire.min);
+	draw(w->i, r, debugcol, nil, w->f.entire.min);
 	wborder(w, wscale(w, Selborder));
 	wscrdraw(w);
 	incref(&w->ref);	/* ref will be removed after mounting; avoids delete before ready to be deleted */
