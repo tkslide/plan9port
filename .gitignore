@@ -127,6 +127,7 @@ bin/mklatinkbd
 bin/mntgen
 bin/mtime
 bin/namespace
+bin/nc
 bin/ndbipquery
 bin/ndbmkdb
 bin/ndbmkhash
