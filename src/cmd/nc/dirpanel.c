@@ -174,7 +174,7 @@ void
 dirpanelredrawnotify(Dirpanel *p)
 {
 	dirpanelredraw(p);
-	sendul(p->c, 1);
+	nbsendul(p->c, 1);
 }
 
 void
