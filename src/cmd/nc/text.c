@@ -204,7 +204,7 @@ textscroll(Text *t, int lines)
 	if(t->offset + t->nlines%t->vlines >= t->nlines)
 		t->offset = t->nlines - t->nlines%t->vlines;
 	textredraw(t);
-	sendul(t->c, 1);
+	nbsendul(t->c, 1);
 }
 
 static void

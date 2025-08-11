@@ -47,6 +47,7 @@ cmdpagedown(void)
 }
 
 Binding	viewerbindings[] = {
+	{ Kesc,   cmdquit },
 	{ KF|10,	cmdquit },
 	{ Kup,		cmdup },
 	{ Kdown,	cmddown },
