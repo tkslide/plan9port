@@ -3,7 +3,7 @@
 void
 datestr(char *buf, ulong bufsz, long dt)
 {
-	char *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	char *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 			   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	Tm *tm;
 
@@ -15,7 +15,7 @@ Dirpanel*
 mkdirpanel(Dirmodel *dm)
 {
 	Dirpanel *dp;
-	
+
 	dp = emalloc(sizeof *dp);
 	dp->c = chancreate(sizeof(ulong), 1);
 	dp->b = nil;
@@ -47,7 +47,7 @@ drawfname(Dirpanel *p, Point pt, Image *f, char *t, int xmax)
 	char *s;
 	Rune r;
 	int i;
-	
+
 	s = t;
 	for(i = 0; *s && i < 2; i++){
 		s += chartorune(&r, s);
@@ -66,7 +66,7 @@ drawfname(Dirpanel *p, Point pt, Image *f, char *t, int xmax)
 }
 
 void
-drawline(Dirpanel *p, int index) 
+drawline(Dirpanel *p, int index)
 {
 	Rectangle r;
 	Image *b, *f;
@@ -87,7 +87,7 @@ drawline(Dirpanel *p, int index)
 		b = cols[Csel];
 	}
 	if(p->model->sel[p->offset + index])
-		f = cols[Ctitle];
+		f = cols[Cborder];
 	else if(!p->focused)
 		f = cols[Clfg];
 	draw(p->b, r, b, nil, ZP);
@@ -114,7 +114,7 @@ sizecolwidth(Dirpanel *p)
 	vlong m;
 	int i, n;
 	Dir d;
-	
+
 	m = 1;
 	for(i = 0; i < dirmodelcount(p->model); i++){
 		d = dirmodelgetdir(p->model, i);

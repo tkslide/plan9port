@@ -20,7 +20,7 @@ void
 dirviewredraw(Dirview *d)
 {
 	Rectangle r, lr, rr;
-	
+
 	r = Rect(0, 0, Dx(d->r), Dy(d->r));
 	lr = r;
 	lr.max.x = r.min.x + Dx(r)/2;
@@ -32,7 +32,7 @@ dirviewredraw(Dirview *d)
 		d->b = allocimage(display, r, screen->chan, 0, DNofill);
 	dirpanelredraw(d->leftp);
 	dirpanelredraw(d->rightp);
-	draw(d->b, r, cols[Cbg], nil, ZP);
+	draw(d->b, r, cols[Cfg], nil, ZP);
 	draw(d->b, lr, d->leftp->b, nil, ZP);
 	draw(d->b, rr, d->rightp->b, nil, ZP);
 }
@@ -51,7 +51,7 @@ dirviewemouse(Dirview *v, Mouse m)
 {
 	if(!m.buttons)
 		return;
-	if((ptinrect(m.xy, v->leftp->r) && !v->leftp->focused) 
+	if((ptinrect(m.xy, v->leftp->r) && !v->leftp->focused)
 	|| (ptinrect(m.xy, v->rightp->r) && !v->rightp->focused))
 		switchfocus(v);
 	if(ptinrect(m.xy, v->leftp->r) && v->leftp->focused)
@@ -65,7 +65,7 @@ mkdirview(char *lpath, char *rpath)
 {
 	Dirview *dv;
 	Dirmodel *m;
-	
+
 	dv = emalloc(sizeof *dv);
 	dv->c = chancreate(sizeof(ulong), 1);
 	dv->b = nil;
