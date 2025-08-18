@@ -1,5 +1,8 @@
 #include "a.h"
 
+Plumbmsg m;
+char *plumbfile = nil;
+
 static long
 dirlist(Dirpanel *p, Dir **d)
 {
@@ -50,30 +53,48 @@ cmdplumb(void)
 {
 	Dirpanel *p;
 	Dir d;
-	int fd;
 	char s[1024];
-	Plumbmsg *m;
 
 	p = dirviewcurrentpanel(dview);
 	d = dirmodelgetdir(p->model, dirpanelselectedindex(p));
-	fd = plumbopen("send", OWRITE|OCEXEC);
+	snprint(s, sizeof s, "plumb %s/%s", p->model->path, d.name);
+	system(s);
+	/*
+	Dirpanel *p;
+	Dir d;
+	//static CFid *fid;
+	int fd;
+	char s[1024];
+	char buf[1024];
+
+	if(plumbfile != nil)
+		fd = open(plumbfile, OWRITE);
+	else
+		fd = plumbopen("send", O_WRONLY);
+	if (fd < 0) {
+		fprint(2, "plumb: can't open plumb file: %r\n");
+		return;
+	}
+	p = dirviewcurrentpanel(dview);
+	d = dirmodelgetdir(p->model, dirpanelselectedindex(p));
+
+	//m = emalloc(sizeof(Plumbmsg));
 	snprint(s, sizeof s, "%s/%s", p->model->path, d.name);
 	//t = d.name;
-	if(fd < 0)
-		return;
 	//s = smprint("%.*s", sizeof(t)+1, t);
-	m = emalloc(sizeof(Plumbmsg));
-	m->src = strdup("nc");
-	m->dst = nil;
-	m->type = strdup("text");
-	m->attr = nil;
-	m->data = s; //runetobyte(s, s1-s0);
-	m->ndata = strlen(m->data);
-	if(m != 0)
-		plumbsend(fd, m);
-	plumbfree(m);
+	m.src = "nc";
+	m.dst = nil;
+	m.wdir = getwd(buf, sizeof buf);
+	m.type = strdup("text");
+	m.attr = nil;
+	m.data = s; //runetobyte(s, s1-s0);
+	m.ndata = strlen(m.data)+1;
+	if(plumbsend(fd, &m) < 0){
+			fprint(2, "plumb: can't send message: %r\n");
+	}
+	plumbfree(&m);
 	free(s);
-	close(fd);
+	*/
 }
 
 static void

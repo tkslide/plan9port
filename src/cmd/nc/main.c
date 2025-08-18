@@ -18,14 +18,14 @@ void
 colsinit(void)
 {
 	if(!bmode){
-		cols[Cbg] = display->white;
-		cols[Cfg] = display->black;
-		cols[Clfg] = ealloccolor(0x666666FF);
-		cols[Ctitle] = ealloccolor(DGreygreen);
-		cols[Cborder] = ealloccolor(0xAAAAAAFF);
-		cols[Csel] = ealloccolor(0xCCCCCCFF);
-		cols[Cselfg] = display->black;
-		cols[Cerror] = ealloccolor(0x721c24ff);
+		cols[Cbg] = ealloccolor(C_TXTBG);
+		cols[Cfg] = ealloccolor(C_TXTFG);
+		cols[Clfg] = ealloccolor(C_TXTFG);
+		cols[Ctitle] = ealloccolor(C_TAGHLFG);
+		cols[Cborder] = ealloccolor(C_SCROLLBG);
+		cols[Csel] = ealloccolor(C_TXTHLBG);
+		cols[Cselfg] = ealloccolor(C_TAGFG);
+		cols[Cerror] = ealloccolor(C_DEBUG);
 		cols[Cdlgbg] = ealloccolor(0xFAFAFAFF);
 		cols[Cdlgbord] = ealloccolor(0xCCCCCCFF);
 	}else{
@@ -197,9 +197,7 @@ threadmain(int argc, char **argv)
 	if((kc = initkeyboard(nil)) == nil)
 		sysfatal("initkdb: %r");
 	display->locking = 0;
-	//home = homedir();
 	home = homedir(getuser());
-	//home = "/home/rafal";
 	if(getwd(pwd, sizeof pwd) == nil)
 		strncpy(pwd, home, strlen(home));
 	dview = mkdirview(pwd, home);
@@ -222,45 +220,36 @@ threadmain(int argc, char **argv)
 	for(;;){
 		switch(alt(alts)){
 		case Emouse:
-// 			fprintf(stderr,"mouse\n");
 			emouse(m);
 			break;
 		case Eresize:
-// 			fprintf(stderr,"resize\n");
 			if(getwindow(display, Refnone) < 0)
 				sysfatal("getwindow: %r");
 			resize();
 			redraw();
 			break;
 		case Ekbd:
-// 			fprintf(stderr,"kbd\n");
 			ekbd(k);
 			break;
 		case Edirview:
-// 			fprintf(stderr,"dirview\n");
 			draw(screen, dview->r, dview->b, nil, ZP);
 			flushimage(display, 1);
 			break;
 		case Eleftmodel:
-// 			fprintf(stderr,"leftmodel\n");
 			dirpanelredraw(dview->leftp);
 		case Eleftpanel:
-// 			fprintf(stderr,"leftpanel\n");
 			draw(dview->b, dview->leftr, dview->leftp->b, nil, ZP);
 			draw(screen, dview->r, dview->b, nil, ZP);
 			flushimage(display, 1);
 			break;
 		case Erightmodel:
-// 			fprintf(stderr,"rightmodel\n");
 			dirpanelredraw(dview->rightp);
-		case Erightpanel:
-// 			fprintf(stderr,"rightpanel\n");
+		case Erightpanel:;
 			draw(dview->b, dview->rightr, dview->rightp->b, nil, ZP);
 			draw(screen, dview->r, dview->b, nil, ZP);
 			flushimage(display, 1);
 			break;
 		case Etext:
-// 			fprintf(stderr,"text\n");
 			draw(screen, text->r, text->b, nil, ZP);
 			flushimage(display, 1);
 			break;

@@ -1,14 +1,17 @@
 #include <u.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <pwd.h>
 #include <libc.h>
 #include <draw.h>
 #include <mouse.h>
 #include <keyboard.h>
-#include <thread.h>
 #include <plumb.h>
+#include <thread.h>
+/* #include <9pclient.h> */
 #include <bio.h>
 #include <ctype.h>
+#include <colors.h>
 
 typedef struct Dirview Dirview;
 typedef struct Dirpanel Dirpanel;
@@ -203,3 +206,5 @@ extern Text*		text;
 extern Actionbar*	abar;
 extern Binding*		bindings;
 extern char			help[];
+
+#define nil ((void*)0)

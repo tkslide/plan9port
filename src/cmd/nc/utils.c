@@ -10,8 +10,8 @@ Image*
 ealloccolor(ulong col)
 {
 	Image *b;
-	
-	b = allocimage(display, Rect(0, 0, 1, 1), screen->chan, 1, col);
+
+	b = allocimage(display, Rect(0, 0, 1, 1), RGBA32, 1, col);
 	if(b == nil)
 		sysfatal("allocimage: %r");
 	return b;
@@ -21,7 +21,7 @@ void*
 emalloc(ulong n)
 {
 	void *p;
-	
+
 	p = malloc(n);
 	if(p == nil)
 		sysfatal("malloc: %r");
@@ -32,7 +32,7 @@ void*
 erealloc(void *p, ulong n)
 {
 	void *t;
-	
+
 	t = realloc(p, n);
 	if(t == nil)
 		sysfatal("realloc: %r");
