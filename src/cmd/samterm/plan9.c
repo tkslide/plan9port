@@ -20,6 +20,7 @@
 #include <plumb.h>
 #include "flayer.h"
 #include "samterm.h"
+#include <colors.h>
 
 static char *exname;
 
@@ -57,7 +58,7 @@ getscreen(int argc, char **argv)
 		maxtab = strtoul(t, nil, 0);
 		free(t);
 	}
-	draw(screen, screen->clipr, display->white, nil, ZP);
+	draw(screen, screen->clipr,allocimage(display, Rect(0,0,1,1), RGBA32, 1, C_TXTBG) , nil, ZP);
 }
 
 int
