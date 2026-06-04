@@ -144,7 +144,6 @@ usage(void)
 {
 	fprint(2, "%s [-b]\n", argv0);
 	threadexitsall("usage");
-
 }
 
 enum
@@ -229,6 +228,7 @@ threadmain(int argc, char **argv)
 			redraw();
 			break;
 		case Ekbd:
+                        //fprint(2, "%C\n", k);
 			ekbd(k);
 			break;
 		case Edirview:
